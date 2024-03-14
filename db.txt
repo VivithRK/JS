@@ -32,13 +32,6 @@ CREATE TABLE Certified (
 );
 
 
-INSERT INTO Flights (fno, source, destination, distance, departs, arrives) VALUES (1, 'CityA', 'CityB', 500, '08:00:00', '10:00:00');
-
-INSERT INTO Aircraft (aid, aname, cruisingrange) VALUES (1, 'Boeing 737', 3000);
-
-INSERT INTO Employees (eid, ename, salary) VALUES (1, 'John Doe', 120000);
-
-INSERT INTO Certified (eid, aid) VALUES (1, 1);
 
 INSERT INTO Employees (eid, ename, salary) VALUES 
 (2, 'Jane Smith', 95000),
