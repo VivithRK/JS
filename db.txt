@@ -84,3 +84,40 @@ SELECT DISTINCT eid
 FROM Certified 
 JOIN Aircraft ON Certified.aid = Aircraft.aid 
 WHERE Aircraft.aname LIKE 'Boeing%';
+
+2. SELECT DISTINCT ename 
+FROM Employees 
+JOIN Certified ON Employees.eid = Certified.eid 
+JOIN Aircraft ON Certified.aid = Aircraft.aid 
+WHERE Aircraft.aname LIKE 'Boeing%';
+3. SELECT aid 
+FROM Aircraft 
+WHERE cruisingrange >= (SELECT distance FROM Flights WHERE source = 'Bonn' AND destination = 'Madras');
+4. SELECT fno 
+FROM Flights 
+WHERE NOT EXISTS (
+    SELECT * 
+    FROM Employees 
+    WHERE salary > 100000 
+    AND NOT EXISTS (
+        SELECT * 
+        FROM Certified 
+        WHERE Certified.eid = Employees.eid 
+        AND Certified.aid IN (
+            SELECT DISTINCT aid 
+            FROM Flights
+        )
+    )
+);
+5.  SELECT DISTINCT ename 
+FROM Employees 
+JOIN Certified ON Employees.eid = Certified.eid 
+JOIN Aircraft ON Certified.aid = Aircraft.aid 
+WHERE Aircraft.cruisingrange > 3000 
+AND Aircraft.aname NOT LIKE 'Boeing%' 
+AND Employees.eid NOT IN (
+    SELECT DISTINCT eid 
+    FROM Certified 
+    JOIN Aircraft ON Certified.aid = Aircraft.aid 
+    WHERE Aircraft.aname LIKE 'Boeing%'
+);
