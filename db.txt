@@ -77,3 +77,10 @@ INSERT INTO Certified (eid, aid) VALUES
 (8, 8),
 (9, 9),
 (10, 10);
+
+
+-- 1 answer
+SELECT DISTINCT eid 
+FROM Certified 
+JOIN Aircraft ON Certified.aid = Aircraft.aid 
+WHERE Aircraft.aname LIKE 'Boeing%';
