@@ -36,7 +36,7 @@ INSERT INTO Student (snum, sname, major, level, age) VALUES
 (5, 'Eve', 'Computer Science', 'JR', 20);
 
 -- Sample data for Faculty table
-INSERT INTO Faculty (fid, fname) VALUES
+INSERT INTO Faculty VALUES
 (1, 'Prof. Smith',23),
 (2, 'Dr. Johnson',21),
 (3, 'Prof. Lee',24),
