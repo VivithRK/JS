@@ -25,3 +25,43 @@ CREATE TABLE Student (
          FOREIGN KEY (snum) REFERENCES Student(snum),
          FOREIGN KEY (cname) REFERENCES Class(cname)
      );
+
+-- VAlues
+-- Sample data for Student table
+INSERT INTO Student (snum, sname, major, level, age) VALUES
+(1, 'Alice', 'Computer Science', 'JR', 20),
+(2, 'Bob', 'History', 'SR', 22),
+(3, 'Charlie', 'Mathematics', 'JR', 21),
+(4, 'David', 'History', 'SO', 19),
+(5, 'Eve', 'Computer Science', 'JR', 20);
+
+-- Sample data for Faculty table
+INSERT INTO Faculty (fid, fname) VALUES
+(1, 'Prof. Smith'),
+(2, 'Dr. Johnson'),
+(3, 'Prof. Lee'),
+(4, 'Dr. Adams');
+
+-- Sample data for Class table
+INSERT INTO Class (cname, meets_at, room, fid) VALUES
+('CS101', 'Mon 9:00AM', 'R128', 1),
+('HIST101', 'Tue 10:00AM', 'R101', 2),
+('MATH201', 'Wed 11:00AM', 'R128', 3),
+('CS201', 'Thu 2:00PM', 'R102', 1),
+('ENG101', 'Fri 3:00PM', 'R128', 4);
+
+-- Sample data for Enrolled table
+INSERT INTO Enrolled (snum, cname) VALUES
+(1, 'CS101'),
+(2, 'HIST101'),
+(3, 'MATH201'),
+(4, 'CS101'),
+(5, 'CS101'),
+(1, 'MATH201'),
+(2, 'ENG101'),
+(3, 'CS201'),
+(4, 'HIST101'),
+(5, 'CS201');
+
+
+
