@@ -1,0 +1,27 @@
+CREATE TABLE Student (
+    snum INT PRIMARY KEY,
+    sname VARCHAR(50),
+    major VARCHAR(50),
+    level VARCHAR(2),
+    age INT
+);
+
+ CREATE TABLE Faculty (
+        fid INT PRIMARY KEY,
+      fname VARCHAR(50),
+     dept_id int);
+
+ CREATE TABLE Class (
+        cname VARCHAR(50) PRIMARY KEY,
+         meets_at VARCHAR(20),
+         room VARCHAR(10),
+         fid INT,
+         FOREIGN KEY (fid) REFERENCES Faculty(fid)
+     );
+ CREATE TABLE Enrolled (
+        snum INT,
+         cname VARCHAR(50),
+         PRIMARY KEY (snum, cname),
+         FOREIGN KEY (snum) REFERENCES Student(snum),
+         FOREIGN KEY (cname) REFERENCES Class(cname)
+     );
