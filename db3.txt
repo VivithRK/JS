@@ -63,5 +63,21 @@ INSERT INTO Enrolled (snum, cname) VALUES
 (4, 'HIST101'),
 (5, 'CS201');
 
+-- 1. 
+SELECT DISTINCT s.sname
+FROM Student s
+JOIN Enrolled e ON s.snum = e.snum
+JOIN Class c ON e.cname = c.cname
+JOIN Faculty f ON c.fid = f.fid
+WHERE s.level = 'JR' AND f.fname = 'Prof. Smith';
+
+--2.
+SELECT MAX(s.age) AS oldest_age
+FROM Student s
+JOIN Enrolled e ON s.snum = e.snum
+JOIN Class c ON e.cname = c.cname
+JOIN Faculty f ON c.fid = f.fid
+WHERE s.major = 'History' OR f.fname = 'Prof. Smith';
+
 
 
