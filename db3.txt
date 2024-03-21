@@ -79,5 +79,20 @@ JOIN Class c ON e.cname = c.cname
 JOIN Faculty f ON c.fid = f.fid
 WHERE s.major = 'History' OR f.fname = 'Prof. Smith';
 
+-- 3.
+SELECT cname
+FROM Class
+WHERE room = 'R128'
+OR (SELECT COUNT(*) FROM Enrolled WHERE Enrolled.cname = Class.cname) >= 5;
+
+--4.
+SELECT s.sname
+FROM Student s
+JOIN Enrolled e1 ON s.snum = e1.snum
+JOIN Enrolled e2 ON s.snum = e2.snum AND e1.cname <> e2.cname
+JOIN Class c1 ON e1.cname = c1.cname
+JOIN Class c2 ON e2.cname = c2.cname
+WHERE c1.meets_at = c2.meets_at;
+
 
 
