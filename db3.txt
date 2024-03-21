@@ -37,10 +37,10 @@ INSERT INTO Student (snum, sname, major, level, age) VALUES
 
 -- Sample data for Faculty table
 INSERT INTO Faculty (fid, fname) VALUES
-(1, 'Prof. Smith'),
-(2, 'Dr. Johnson'),
-(3, 'Prof. Lee'),
-(4, 'Dr. Adams');
+(1, 'Prof. Smith',23),
+(2, 'Dr. Johnson',21),
+(3, 'Prof. Lee',24),
+(4, 'Dr. Adams',25);
 
 -- Sample data for Class table
 INSERT INTO Class (cname, meets_at, room, fid) VALUES
