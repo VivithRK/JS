@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <time.h>
+#define INFINITY 999
+
+void dijkstra(int cost[10][10], int n, int source, int distance[10]) {
+    int visited[10], min, u;
+    int i, j;
+    for (i = 1; i <= n; i++) {
+        distance[i] = cost[source][i];
+        visited[i] = 0;
+    }
+    visited[source] = 1;
+    for (i = 1; i <= n; i++) {
+        min = INFINITY;
+        for (j = 1; j <= n; j++)
+            if (visited[j] == 0 && distance[j] < min) {
+                min = distance[j];
+                u = j;
+            }
+        visited[u] = 1;
+        for (j = 1; j <= n; j++)
+            if (visited[j] == 0 && (distance[u] + cost[u][j]) < distance[j]) {
+                distance[j] = distance[u] + cost[u][j];
+            }
+    }
+}
+
+int main() {
+    int n,  distance[10];
+    int i, j, source, sum;
+    clock_t start, end;
+    double cpu_time_used;
+
+    printf("\nEnter how many nodes: 5 ");
+    // scanf("%d", &n);
+    printf("\nCost Matrix\nEnter 999 for no edge\n");
+    int cost[10][10] = {0,10,999,999,5,
+10,0,20,999,999,
+999,20,0,10,999,
+999,999,10,0,20,
+5,999,999,20,0};
+    printf("Enter the source node: 1");
+    // scanf("%d", &source);
+
+    start = clock(); 
+
+    dijkstra(cost, n, source, distance);
+
+    end = clock(); 
+
+    for (i = 1; i <= n; i++)
+        printf("\n\nShortest Distance from %d to %d is %d", source, i, distance[i]);
+
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("\n\nTime taken by Dijkstra's algorithm: %f seconds\n", cpu_time_used);
+
+    return 0;
+}
