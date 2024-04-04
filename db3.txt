@@ -94,5 +94,65 @@ JOIN Class c1 ON e1.cname = c1.cname
 JOIN Class c2 ON e2.cname = c2.cname
 WHERE c1.meets_at = c2.meets_at;
 
+--5.
+SELECT DISTINCT f.fname
+FROM Faculty f
+JOIN Class c ON f.fid = c.fid
+WHERE NOT EXISTS (
+    SELECT DISTINCT room
+    FROM Class c2
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM Class c3
+        WHERE c3.fid = f.fid AND c2.room = c3.room
+    )
+);
+
+--6.
+SELECT DISTINCT f.fname
+FROM Faculty f
+JOIN Class c ON f.fid = c.fid
+GROUP BY f.fname
+HAVING SUM(
+    SELECT COUNT(*)
+    FROM Enrolled e
+    WHERE e.cname = c.cname
+) < 5;
+
+--7.
+SELECT level, AVG(age) AS avg_age
+FROM Student
+GROUP BY level;
+
+--8.
+SELECT level, AVG(age) AS avg_age
+FROM Student
+WHERE level <> 'JR'
+GROUP BY level;
+
+--9.
+SELECT s.sname
+FROM Student s
+JOIN (
+    SELECT snum, COUNT(*) AS num_classes
+    FROM Enrolled
+    GROUP BY snum
+    HAVING COUNT(*) = (
+        SELECT MAX(cnt)
+        FROM (
+            SELECT COUNT(*) AS cnt
+            FROM Enrolled
+            GROUP BY snum
+        ) AS max_classes
+    )
+) AS max_classes ON s.snum = max_classes.snum;
+
+--10.
+SELECT sname
+FROM Student
+WHERE snum NOT IN (
+    SELECT snum
+    FROM Enrolled
+);
 
 
