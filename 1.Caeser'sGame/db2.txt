@@ -1,0 +1,264 @@
+ mysql> create database flight;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use flight;
+Database changed
+mysql> create table flight(
+    -> no INT,
+    -> frm VARCHAR(20),
+    -> too VARCHAR(20),
+    -> distance INT,
+    -> departs VARCHAR(20),
+    -> arrives VARCHAR(20),
+    -> PRIMARY KEY(no));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DESC flight;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| no       | int(11)     | NO   | PRI | 0       |       |
+| frm      | varchar(20) | YES  |     | NULL    |       |
+| too      | varchar(20) | YES  |     | NULL    |       |
+| distance | int(11)     | YES  |     | NULL    |       |
+| departs  | varchar(20) | YES  |     | NULL    |       |
+| arrives  | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+6 rows in set (0.02 sec)
+
+mysql> create table aircraft(
+    -> aid INT,
+    -> aname VARCHAR(20),
+    -> cruisingrange INT,
+    -> PRIMARY KEY(aid));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DESC aircraft;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| aid           | int(11)     | NO   | PRI | 0       |       |
+| aname         | varchar(20) | YES  |     | NULL    |       |
+| cruisingrange | int(11)     | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table employees(
+    -> eid INT,
+    -> ename VARCHAR(20),
+    -> salary INT,
+    -> PRIMARY KEY(eid));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DESC employees;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| eid    | int(11)     | NO   | PRI | 0       |       |
+| ename  | varchar(20) | YES  |     | NULL    |       |
+| salary | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+mysql> create table certified(
+    -> eid INT,
+    -> aid INT,
+    -> PRIMARY KEY(eid,aid),
+    -> FOREIGN KEY(eid) REFERENCES employees(eid),
+    -> FOREIGN KEY(aid) REFERENCES aircraft(aid));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DESC certified;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| eid   | int(11) | NO   | PRI | 0       |       |
+| aid   | int(11) | NO   | PRI | 0       |       |
++-------+---------+------+-----+---------+-------+
+2 rows in set (0.02 sec)
+
+mysql>mysql> INSERT INTO flight (no,frm,too,distance,departs,arrives,price) VALUES 
+            (1,'Bangalore','Mangalore',360,'10:45:00','12:00:00',10000),
+            (2,'Bangalore','Delhi',5000,'12:15:00','04:30:00',25000),
+            (3,'Bangalore','Mumbai',3500,'02:15:00','05:25:00',30000),
+            (4,'Delhi','Mumbai',4500,'10:15:00','12:05:00',35000),
+            (5,'Delhi','Frankfurt',18000,'07:15:00','05:30:00',90000),
+            (6,'Bangalore','Frankfurt',19500,'10:00:00','07:45:00',95000),
+            (7,'Bangalore','Frankfurt',17000,'12:00:00','06:30:00',99000);
+Query OK, 7 rows affected (0.06 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM flight;
++----+-----------+-----------+----------+----------+----------+-------+
+| no | frm       | too       | distance | departs  | arrives  | price |
++----+-----------+-----------+----------+----------+----------+-------+
+|  1 | Bangalore | Mangalore |      360 | 10:45:00 | 12:00:00 | 10000 |
+|  2 | Bangalore | Delhi     |     5000 | 12:15:00 | 04:30:00 | 25000 |
+|  3 | Bangalore | Mumbai    |     3500 | 02:15:00 | 05:25:00 | 30000 |
+|  4 | Delhi     | Mumbai    |     4500 | 10:15:00 | 12:05:00 | 35000 |
+|  5 | Delhi     | Frankfurt |    18000 | 07:15:00 | 05:30:00 | 90000 |
+|  6 | Bangalore | Frankfurt |    19500 | 10:00:00 | 07:45:00 | 95000 |
+|  7 | Bangalore | Frankfurt |    17000 | 12:00:00 | 06:30:00 | 99000 |
++----+-----------+-----------+----------+----------+----------+-------+
+7 rows in set (0.00 sec)
+mysql> INSERT INTO aircraft (aid,aname,cruisingrange) values 
+        (123,'Airbus',1000),
+        (302,'Boeing',5000),
+        (306,'Jet01',5000),
+        (378,'Airbus380',8000),
+        (456,'Aircraft',500),
+        (789,'Aircraft02',800),
+        (951,'Aircraft03',1000);
+Query OK, 7 rows affected (0.07 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+
+mysql> SELECT * FROM aircraft;
++-----+------------+---------------+
+| aid | aname      | cruisingrange |
++-----+------------+---------------+
+| 123 | Airbus     |          1000 |
+| 302 | Boeing     |          5000 |
+| 306 | Jet01      |          5000 |
+| 378 | Airbus380  |          8000 |
+| 456 | Aircraft   |           500 |
+| 789 | Aircraft02 |           800 |
+| 951 | Aircraft03 |          1000 |
++-----+------------+---------------+
+7 rows in set (0.00 sec)
+INSERT INTO employees (eid,ename,salary) VALUES
+        (1,'Ajay',30000),
+        (2,'Ajith',85000),
+        (3,'Arnab',50000),
+        (4,'Harry',45000),
+        (5,'Ron',90000),
+        (6,'Josh',75000),
+        (7,'Ram',100000);
+
+Query OK, 7 rows affected (0.29 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM employees;
++-----+-------+--------+
+| eid | ename | salary |
++-----+-------+--------+
+|   1 | Ajay  |  30000 |
+|   2 | Ajith |  85000 |
+|   3 | Arnab |  50000 |
+|   4 | Harry |  45000 |
+|   5 | Ron   |  90000 |
+|   6 | Josh  |  75000 |
+|   7 | Ram   | 100000 |
++-----+-------+--------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO certified (eid,aid) VALUES
+        (1,123),
+        (2,123),
+        (1,302),
+        (5,302),
+        (7,302),
+        (1,306),
+        (2,306),
+        (1,378),
+        (2,378),
+        (4,378),
+        (6,456),
+        (3,456),
+        (5,789),
+        (6,789),
+        (3,951),
+        (1,951),
+        (1,789);
+Query OK, 17 rows affected (0.30 sec)
+Records: 17  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM certified;
++-----+-----+
+| eid | aid |
++-----+-----+
+|   1 | 123 |
+|   2 | 123 |
+|   1 | 302 |
+|   5 | 302 |
+|   7 | 302 |
+|   1 | 306 |
+|   2 | 306 |
+|   1 | 378 |
+|   2 | 378 |
+|   4 | 378 |
+|   3 | 456 |
+|   6 | 456 |
+|   1 | 789 |
+|   5 | 789 |
+|   6 | 789 |
+|   1 | 951 |
+|   3 | 951 |
++-----+-----+
+17 rows in set (0.00 sec)
+
+
+1.Find the eids of pilots certified for some Boeing aircraft.
+
+mysql> SELECT distinct e.eid
+    -> FROM employees e,aircraft a,certified c
+    -> WHERE e.eid=c.eid
+    -> AND c.aid=a.aid
+    -> AND a.aname='Boeing';
++-----+
+| eid |
++-----+
+|   1 |
+|   5 |
+|   7 |
++-----+
+3 rows in set (0.00 sec)
+
+2. Find the names of pilots certified for some Boeing aircraft.
+mysql> SELECT distinct e.ename
+    -> FROM employees e,aircraft a,certified c
+    -> WHERE e.eid=c.eid
+    -> AND c.aid=a.aid
+    -> AND a.aname='Boeing';
++-------+
+| ename |
++-------+
+| Ajay  |
+| Ron   |
+| Ram   |
++-------+
+3 rows in set (0.00 sec)
+
+3. Find the aids of all aircraft that can be used on non-stop flights from Bonn
+to Madras.
+
+mysql> SELECT A.aid FROM Aircraft A, Flight F WHERE F.frm = 'Bonn' AND F.too = 'Madras' AND A.cruisingrange > F.distance;
+Empty set (0.00 sec)
+
+4. Identify the flights that can be piloted by every pilot whose salary is more
+than $100,000.
+
+ SELECT    DISTINCT  F.frm, F.too FROM  Flight F WHERE NOT EXISTS  ( SELECT  * FROM  Employees E WHERE  E.salary > 100000 AND NOT EXISTS (SELECT  * FROM  Aircraft A, Certified C WHERE  A.cruisingrange > F.distance AND  E.eid = C.eid
+AND A.aid = C.aid) );
++-----------+-----------+
+| frm       | too       |
++-----------+-----------+
+| Bangalore | Mangalore |
+| Bangalore | Delhi     |
+| Bangalore | Mumbai    |
+| Delhi     | Mumbai    |
+| Delhi     | Frankfurt |
+| Bangalore | Frankfurt |
++-----------+-----------+
+6 rows in set (0.00 sec)
+
+5. Find the names of pilots who can operate planes with a range greater than 3,000 miles but are not certified on any Boeing aircraft
+
+mysql> SELECT E.ename FROM Certified C, Employees E, Aircraft A WHERE A.aid = C.aid AND E.eid = C.eid AND A.cruisingrange > 3000 AND E.eid NOT IN ( SELECT C2.eid FROM Certified C2, Aircraft A2 WHERE C2.aid = A2.aid AND A2.aname = 'Boeing' );
++-------+
+| ename |
++-------+
+| Ajith |
+| Ajith |
+| Harry |
++-------+
+3 rows in set (0.00 sec)
