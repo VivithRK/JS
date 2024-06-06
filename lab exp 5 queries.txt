@@ -1,0 +1,182 @@
+mysql> CREATE TABLE BOOK(
+    -> Book_id int primary key,
+    -> title char(20),
+    -> publisher_name char(20),
+    -> pub_year date);
+
+mysql> CREATE TABLE book_authors(
+    -> book_id int,
+    -> author_name char(20),
+    -> foreign key(book_id) REFERENCES book(book_id) ON DELETE CASCADE ON UPDATE CASCADE);
+
+mysql> CREATE TABLE publisher(
+    -> name char(20),
+    -> address char(20),
+    -> phone int);
+
+mysql> CREATE TABLE library_branch(
+    -> branch_id int,
+    -> branch_name char(20),
+    -> address char(20),
+    -> primary key(branch_id));
+
+mysql> CREATE TABLE book_copies(
+    -> book_id int,
+    -> branch_id int,
+    -> no_of_copies int,
+    -> foreign key(book_id) REFERENCES book(book_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    -> foreign key(branch_id) REFERENCES library_branch(branch_id) ON DELETE CASCADE ON UPDATE CASCADE);
+
+mysql> CREATE TABLE book_lending(
+    -> book_id int,
+    -> branch_id int,
+    -> card_no int,
+    -> date_out date,
+    -> due_date date,
+    -> FOREIGN KEY (book_id) REFERENCES book(book_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    -> FOREIGN KEY (branch_id) REFERENCES library_branch(branch_id) ON DELETE CASCADE ON UPDATE CASCADE);
+
+patterns I followed -
+book id - 10(1...) 
+pub_year - 200(1...)-01-01
+address - 0(1...) street(A...)
+branch_id - 20(1...)
+card no - 30(1...)
+date out - 201(1...)-01-01
+
+mysql> SELECT * FROM book;
++---------+---------------+----------------+------------+
+| Book_id | title         | publisher_name | pub_year   |
++---------+---------------+----------------+------------+
+|     101 | python basics | aditya         | 2001-01-01 |
+|     102 | java basics   | ben            | 2002-02-02 |
++---------+---------------+----------------+------------+
+
+mysql> SELECT * FROM book_authors;
++---------+---------------+
+| book_id | author_name   |
++---------+---------------+
+|     101 | guido van     |
+|     102 | james godling |
++---------+---------------+
+
+mysql> SELECT * FROM publisher;
++--------+--------------+-------+
+| name   | address      | phone |
++--------+--------------+-------+
+| aditya | 01, street A |   123 |
+| ben    | 02, street B |   456 |
++--------+--------------+-------+
+
+mysql> SELECT * FROM library_branch;
++-----------+---------------+--------------+
+| branch_id | branch_name   | address      |
++-----------+---------------+--------------+
+|       201 | library alpha | alpha street |
+|       202 | library beta  | beta street  |
++-----------+---------------+--------------+
+
+mysql> SELECT * FROM book_copies;
++---------+-----------+--------------+
+| book_id | branch_id | no_of_copies |
++---------+-----------+--------------+
+|     101 |       202 |           20 |
+|     101 |       201 |           10 |
+|     102 |       201 |           30 |
+|     102 |       202 |           40 |
++---------+-----------+--------------+
+
+mysql> SELECT * FROM book_lending;
++---------+-----------+---------+------------+------------+
+| book_id | branch_id | card_no | date_out   | due_date   |
++---------+-----------+---------+------------+------------+
+|     101 |       201 |     301 | 2001-01-01 | 2001-01-11 |
+|     102 |       202 |     302 | 2002-02-02 | 2002-02-12 |
++---------+-----------+---------+------------+------------+
+
+query 1) - (author name can't my selected as it is a non-aggregated column that isn't functionally dependent on the column in group by clause (bc.book_id in this case), a subquery method won't work as subquery will return more than 1)
+mysql> SELECT b.book_id , b.title , b.publisher_name , sum(bc.no_of_copies) FROM book b JOIN book_authors ba ON b.book_id = ba.book_id JOIN book_copies bc ON b.book_id = bc.book_id GROUP BY bc.book_id ;
++---------+---------------+----------------+----------------------+
+| book_id | title         | publisher_name | sum(bc.no_of_copies) |
++---------+---------------+----------------+----------------------+
+|     101 | python basics | aditya         |                   30 |
+|     102 | java basics   | ben            |                   70 |
++---------+---------------+----------------+----------------------+
+
+query 2)  Get the particulars of borrowers who have borrowed more than 3
+books, but from Jan 2017 to Jun 2017
+
+mysql> SELECT book_id FROM book_lending WHERE (date_out >= '2017-01-01' AND date_out <= '2017-06-30') GROUP BY book_id HAVING count(*) > 3 ;
+Empty set (0.00 sec)
+
+query 3)  Delete a book in BOOK table. Update the contents of other tables to
+reflect this data manipulation operation.
+
+mysql> DELETE FROM book WHERE book_id = 101;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM book;
++---------+-------------+----------------+------------+
+| Book_id | title       | publisher_name | pub_year   |
++---------+-------------+----------------+------------+
+|     102 | java basics | ben            | 2002-02-02 |
++---------+-------------+----------------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM book_authors;
++---------+---------------+
+| book_id | author_name   |
++---------+---------------+
+|     102 | james godling |
++---------+---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM book_copies;
++---------+-----------+--------------+
+| book_id | branch_id | no_of_copies |
++---------+-----------+--------------+
+|     102 |       201 |           30 |
+|     102 |       202 |           40 |
++---------+-----------+--------------+
+
+query 4) - Partition the BOOK table based on year of publication. Demonstrate
+its working with a simple query.
+
+mysql> SELECT pub_year,count(*) as `total books published in the year` FROM book GROUP BY pub_year;
++------------+-----------------------------------+
+| pub_year   | total books published in the year |
++------------+-----------------------------------+
+| 2002-02-02 |                                 1 |
++------------+-----------------------------------+
+
+
+query 5) - Create a view of all books and its number of copies that are currently
+available in the Library.
+
+mysql> CREATE VIEW `book_id and total copies` as SELECT b.book_id, sum(bc.no_of_copies) FROM book b JOIN book_copies bc ON b.book_id = bc.book_id GROUP BY b.book_id;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM `book_id and total copies`;
++---------+----------------------+
+| book_id | sum(bc.no_of_copies) |
++---------+----------------------+
+|     102 |                   70 |
++---------+----------------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

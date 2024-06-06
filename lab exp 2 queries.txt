@@ -1,0 +1,130 @@
+CREATE TABLE flights(
+    -> flno int primary key,
+    -> fromLoc char(20),
+    -> toLoc char(20),
+    -> distance int,
+    -> departs time,
+    -> arrives time);
+
+CREATE TABLE aircraft(
+    -> aid int primary key,
+    -> aname char(20),
+    -> cruisingrange int);
+
+CREATE TABLE certified(
+    -> eid int primary key,
+    -> aid int);
+
+CREATE TABLE employees(
+    -> eid int primary key,
+    -> ename char(20),
+    -> salary int);
+
+flights table - 
++------+---------+---------------+----------+----------+----------+
+| flno | fromLoc | toLoc         | distance | departs  | arrives  |
++------+---------+---------------+----------+----------+----------+
+|  100 | bonn    | madras        |     4784 | 06:00:00 | 18:00:00 |
+|  101 | chicago | paris         |     5000 | 07:00:00 | 19:00:00 |
+|  102 | tokyo   | san francisco |     2000 | 08:00:00 | 20:00:00 |
++------+---------+---------------+----------+----------+----------+
+
+aircraft table - 
++-----+---------+---------------+
+| aid | aname   | cruisingrange |
++-----+---------+---------------+
+| 100 | airbus  |          5000 |
+| 101 | boeing  |          6000 |
+| 102 | antonov |          2000 |
++-----+---------+---------------+
+
+certified table -
++-----+------+
+| eid | aid  |
++-----+------+
+| 200 |  100 |
+| 201 |  100 |
+| 202 |  101 |
+| 203 |  101 |
+| 204 |  102 |
+| 205 |  102 |
++-----+------+
+
+employees table - 
++-----+----------+--------+
+| eid | ename    | salary |
++-----+----------+--------+
+| 200 | aditya   | 500000 |
+| 201 | ben      | 100000 |
+| 202 | connor   | 200000 |
+| 203 | davey    |  50000 |
+| 204 | evelyn   |  60000 |
+| 205 | franklin |  60000 |
++-----+----------+--------+
+
+
+query 1) 
+mysql> SELECT c.eid FROM certified c JOIN aircraft a ON c.aid = a.aid JOIN employees e ON c.eid = e.eid WHERE aname = 'boeing' ;
++-----+
+| eid |
++-----+
+| 202 |
+| 203 |
++-----+
+
+query 2) 
+mysql> SELECT e.ename FROM certified c JOIN aircraft a ON c.aid = a.aid JOIN employees e ON c.eid = e.eid WHERE aname = 'boeing' ;
++--------+
+| ename  |
++--------+
+| connor |
+| davey  |
++--------+
+
+query 3)
+mysql> SELECT flno AS aid FROM flights WHERE fromLoc = 'bonn' AND toLoc = 'madras';
++-----+
+| aid |
++-----+
+| 100 |
++-----+
+
+query 4)
+mysql> SELECT c.aid, a.aname FROM certified c JOIN aircraft a ON c.aid = a.aid JOIN employees e ON c.eid = e.eid WHERE e.salary > 100000;
++------+--------+
+| aid  | aname  |
++------+--------+
+|  100 | airbus |
+|  101 | boeing |
++------+--------+
+
+query 5) 
+mysql> SELECT e.ename FROM certified c JOIN aircraft a ON c.aid = a.aid JOIN employees e ON c.eid = e.eid WHERE a.cruisingrange > 3000 AND a.aname != 'boeing';
++--------+
+| ename  |
++--------+
+| aditya |
+| ben    |
++--------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
