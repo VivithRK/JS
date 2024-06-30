@@ -1,102 +1,61 @@
 #include <stdio.h>
-#define MAX 30
+#define INFINITY 999
+#define MAX 100
 
-typedef struct edge {
-    int u, v, w;
-} edge;
+int parent[MAX], cost[MAX][MAX], t[MAX][2];
 
-typedef struct edge_list {
-    edge data[MAX];
-    int n;
-} edge_list;
+int find(int v) {
+    while (parent[v]) {
+        v = parent[v];
+    }
+    return v;
+}
 
-edge_list elist;
-int Graph[MAX][MAX], n;
-edge_list spanlist;
+void union1(int i, int j) {
+    parent[j] = i;
+}
 
-void kruskalAlgo();
-int find(int belongs[], int vertexno);
-void applyUnion(int belongs[], int c1, int c2);
-void sort();
-void print();
-
-void kruskalAlgo() {
-    int belongs[MAX], i, j, cno1, cno2;
-    elist.n = 0;
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < i; j++) {
-            if (Graph[i][j] != 0) {
-                elist.data[elist.n].u = i;
-                elist.data[elist.n].v = j;
-                elist.data[elist.n].w = Graph[i][j];
-                elist.n++;
+void kruskal(int n) {
+    int i, j, k, u, v, mincost, res1, res2, sum = 0;
+    for (k = 1; k < n; k++) {
+        mincost = INFINITY;
+        for (i = 1; i <= n; i++) {
+            for (j = 1; j <= n; j++) {
+                if (i == j) continue;
+                if (cost[i][j] < mincost) {
+                    u = find(i);
+                    v = find(j);
+                    if (u != v) {
+                        res1 = i;
+                        res2 = j;
+                        mincost = cost[i][j];
+                    }
+                }
             }
         }
+        union1(find(res1), find(res2));
+        t[k][0] = res1;
+        t[k][1] = res2;
+        sum += mincost;
     }
-    sort();
-    for (i = 0; i < n; i++) {
-        belongs[i] = i;
-    }
-    spanlist.n = 0;
-    for (i = 0; i < elist.n; i++) {
-        cno1 = find(belongs, elist.data[i].u);
-        cno2 = find(belongs, elist.data[i].v);
-        if (cno1 != cno2) {
-            spanlist.data[spanlist.n] = elist.data[i];
-            spanlist.n++;
-            applyUnion(belongs, cno1, cno2);
-        }
-    }
-}
-
-int find(int belongs[], int vertexno) {
-    return belongs[vertexno];
-}
-
-void applyUnion(int belongs[], int c1, int c2) {
-    for (int i = 0; i < n; i++) {
-        if (belongs[i] == c2) {
-            belongs[i] = c1;
-        }
-    }
-}
-
-void sort() {
-    edge temp;
-    for (int i = 1; i < elist.n; i++) {
-        for (int j = 0; j < elist.n - 1; j++) {
-            if (elist.data[j].w > elist.data[j + 1].w) {
-                temp = elist.data[j];
-                elist.data[j] = elist.data[j + 1];
-                elist.data[j + 1] = temp;
-            }
-        }
-    }
-}
-
-void print() {
-    int cost = 0;
-    for (int i = 0; i < spanlist.n; i++) {
-        printf("\n%d - %d : %d", spanlist.data[i].u, spanlist.data[i].v, spanlist.data[i].w);
-        cost += spanlist.data[i].w;
-    }
-    printf("\nSpanning tree cost: %d\n", cost);
+    printf("\nCost of spanning tree is %d\n", sum);
+    printf("\nEdges of spanning tree are\n");
+    for (i = 1; i < n; i++)
+        printf("%d -> %d\n", t[i][0], t[i][1]);
 }
 
 int main() {
-    int i, j;
-    printf("Enter the number of vertices: ");
+    int i, j, n;
+    printf("\nEnter the number of vertices: ");
     scanf("%d", &n);
-
-    printf("Enter the adjacency matrix (0 for no edge):\n");
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            scanf("%d", &Graph[i][j]);
+    for (i = 1; i <= n; i++)
+        parent[i] = 0;
+    printf("\nEnter the cost adjacency matrix (0 for self edge and 999 if no edge):\n");
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            scanf("%d", &cost[i][j]);
         }
     }
-
-    kruskalAlgo();
-    print();
-
+    kruskal(n);
     return 0;
 }
